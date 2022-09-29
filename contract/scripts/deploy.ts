@@ -2,10 +2,10 @@ import { ethers } from "hardhat";
 
 async function main() {
 
-  const MemoryContract = await ethers.getContractFactory("Memory");
-  const lock = await MemoryContract.deploy("Haihe's Friends", "HH");
+  const MemoryContract = await ethers.getContractFactory("HaiheSFriends");
+  const contract = await MemoryContract.deploy();
 
-  await lock.deployed();
+  await contract.deployed();
 
   //console.log(`Lock with 1 ETH and unlock timestamp ${unlockTime} deployed to ${lock.address}`);
 }
