@@ -1,9 +1,15 @@
-import { Typography } from "@mui/material";
+import { IconButton, Typography } from "@mui/material";
 import { Container } from "@mui/system";
 import { useEffect, useState } from "react";
 import AppContext from "./AppContext";
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
 
-function ContractDetail({ context }: { context: AppContext }) {
+interface ContractDetailProps {
+    context: AppContext;
+    onAddClick: () => void;
+}
+
+function ContractDetail({ context, onAddClick }: ContractDetailProps) {
 
     const contract = context.contract!;
 
@@ -25,6 +31,9 @@ function ContractDetail({ context }: { context: AppContext }) {
         <Container>
             <Typography variant="h1" gutterBottom>
                 {name}
+                <IconButton onClick={() => onAddClick()} >
+                    <GroupAddIcon />
+                </IconButton>
             </Typography>
 
 

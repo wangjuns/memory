@@ -1,10 +1,15 @@
-import { Button, TextField } from "@mui/material";
+import { Button, IconButton, Stack, TextField } from "@mui/material";
 import AppContext from "./AppContext";
+import Grid from '@mui/material/Grid';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-function MintFriend({ context }: { context: AppContext }) {
-    let name: string;
+interface MintFriendProps {
+    context: AppContext;
+    onSuccess?: () => void;
+}
+
+function MintFriend({ context, onSuccess }: MintFriendProps) {
     let bless: string;
-    let memory: string;
     const contract = context.contract!;
     const signer = context.provider!.getSigner()
 
@@ -13,17 +18,31 @@ function MintFriend({ context }: { context: AppContext }) {
     async function submitNew() {
         const id = contractWithSigner["mint(string)"](bless)
         console.log(`add success ${id}`)
+        if (onSuccess) {
+            onSuccess()
+        }
     }
 
     return (
         <form>
-            {/* <TextField id="name" label="Name" variant="standard" onChange={(e) => name = e.target.value} /> */}
-            <TextField id="bless" label="祝福" variant="standard" onChange={(e) => bless = e.target.value} />
-            {/* <TextField id="memory" label="回忆" variant="standard" onChange={(e) => memory = e.target.value} /> */}
+            <Grid container spacing={2}>
+                <Grid item xs={12}>
+                    <IconButton onClick={() => onSuccess?.()}>
+                        <ArrowBackIcon />
+                    </IconButton>
 
-            <Button variant="outlined" onClick={() => submitNew()}>Submit</Button>
+                </Grid>
+                <Grid item xs={8}>
+                    <TextField id="bless" label="say..." variant="standard" onChange={(e) => bless = e.target.value} />
+                </Grid>
+
+                <Grid item xs={12}>
+                    <Button variant="outlined" onClick={() => submitNew()}>祝福</Button>
+                </Grid>
 
 
+
+            </Grid>
         </form>
     )
 

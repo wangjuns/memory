@@ -1,13 +1,15 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 
+import { Container, Fab, IconButton } from '@mui/material';
 import { ethers } from "ethers";
-import MemoryABI from "../abi/Memory.json"
-import { Button, Chip, Container, TextField } from '@mui/material';
-import FaceIcon from '@mui/icons-material/Face';
+import MemoryABI from "../abi/Memory.json";
 import AppContext from './AppContext';
-import Friends from './Friends';
 import ContractDetail from './ContractDetail';
+import Friends from './Friends';
 import MintFriend from './MintFriend';
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import Grid from '@mui/material/Grid';
+
 
 interface MetamaskProps {
 
@@ -15,8 +17,7 @@ interface MetamaskProps {
 
 interface MetamaskState {
     context?: AppContext;
-    state: string;
-    showAdd: boolean;
+    content: string;
 }
 
 class Metamask extends Component<MetamaskProps, MetamaskState> {
@@ -24,8 +25,7 @@ class Metamask extends Component<MetamaskProps, MetamaskState> {
         super(props);
 
         this.state = {
-            state: "list",
-            showAdd: false,
+            content: "show",
         };
     }
 
@@ -58,10 +58,47 @@ class Metamask extends Component<MetamaskProps, MetamaskState> {
         } else {
             return (
                 <>
-                    <button onClick={() => { this.setState({ ...this.state, showAdd: true }) }}>Add New</button>
+
                     <p>Welcome {this.state.context.selectedAddress}</p>
                 </>
             );
+        }
+    }
+
+
+    renderMain() {
+        if (this.state.context) {
+            return (
+                <>
+                    {this.state.content === "show" &&
+                        <>
+                            <Grid container spacing={2}>
+                                <Grid item xs={12}>
+                                    <ContractDetail
+                                        context={this.state.context!}
+                                        onAddClick={() => this.setState({ ...this.state, content: "new" })}
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Friends
+                                        context={this.state.context!}
+                                    />
+
+                                </Grid>
+
+                            </Grid>
+
+                        </>
+                    }
+
+                    {this.state.content === "new" &&
+                        <MintFriend context={this.state.context!} onSuccess={() => this.setState({ ...this.state, content: "show" })} />
+                    }
+                </>
+
+            )
+        } else {
+            return (<></>)
         }
     }
 
@@ -75,21 +112,7 @@ class Metamask extends Component<MetamaskProps, MetamaskState> {
 
                         {this.renderMetamask()}
 
-                        {this.state.context &&
-                            <ContractDetail
-                                context={this.state.context!}
-                            />
-                        }
-
-                        {this.state.context &&
-                            <Friends
-                                context={this.state.context!}
-                            />
-                        }
-
-                        {this.state.showAdd &&
-                            <MintFriend context={this.state.context!} />
-                        }
+                        {this.renderMain()}
 
                     </>
                 </Container>
