@@ -1,0 +1,14 @@
+{
+    "title": "Bata",
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string",
+            "description": "Bata"
+        },
+        "bless": {
+            "type": "string",
+            "description": "day day up"
+        }
+    }
+}

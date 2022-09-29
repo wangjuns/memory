@@ -13,7 +13,7 @@ function ContractDetail({ context }: { context: AppContext }) {
     useEffect(() => {
         const fetchData = async () => {
             setName(await contract.name());
-            const size = await contract.totalSize();
+            const size = await contract.totalSupply();
             console.log(size)
             setSize(size.toNumber());
         }
