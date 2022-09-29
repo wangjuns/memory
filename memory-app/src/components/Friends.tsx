@@ -21,7 +21,7 @@ function Friends({ context }: { context: AppContext }) {
 
             for (let i = 0; i < size; i++) {
                 const uri: string = await contract.tokenURI(i);
-                fetch(`https://gateway.pinata.cloud/ipfs/${uri}`)
+                fetch(uri)
                     .then(resp => {
                         console.log(resp)
                         return resp.json()
