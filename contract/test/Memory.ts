@@ -33,6 +33,7 @@ describe("Memory", function () {
       const { memory } = await loadFixture(deployOneYearLockFixture);
       await memory["mint(string)"]("foo bar")
       expect(await memory.ownerOf(0)).to.equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+      expect(await memory.tokenURI(0)).to.equal("foo bar")
     });
   });
 
