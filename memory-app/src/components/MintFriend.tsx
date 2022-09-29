@@ -1,4 +1,4 @@
-import { Button, IconButton, Stack, TextField } from "@mui/material";
+import { Box, Button, IconButton, Stack, TextField } from "@mui/material";
 import AppContext from "./AppContext";
 import Grid from '@mui/material/Grid';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -24,26 +24,39 @@ function MintFriend({ context, onSuccess }: MintFriendProps) {
     }
 
     return (
-        <form>
-            <Grid container spacing={2}>
-                <Grid item xs={12}>
-                    <IconButton onClick={() => onSuccess?.()}>
-                        <ArrowBackIcon />
-                    </IconButton>
+        <>
+            <IconButton onClick={() => onSuccess?.()}>
+                <ArrowBackIcon />
+            </IconButton>
+            <form>
+                <Grid
+                    container
+                    direction="column"
+                    justifyContent="center"
+                    alignItems="center"
+                    spacing={4}
+                >
+
+                    <Grid item xs={8}>
+                        <Box
+                            sx={{
+                                width: 500,
+                                maxWidth: '100%',
+                            }}
+                        >
+                            <TextField id="bless" fullWidth label="say..." variant="standard" onChange={(e) => bless = e.target.value} />
+                        </Box>
+                    </Grid>
+
+                    <Grid item xs={12}>
+                        <Button variant="outlined" onClick={() => submitNew()}>祝福</Button>
+                    </Grid>
+
+
 
                 </Grid>
-                <Grid item xs={8}>
-                    <TextField id="bless" label="say..." variant="standard" onChange={(e) => bless = e.target.value} />
-                </Grid>
-
-                <Grid item xs={12}>
-                    <Button variant="outlined" onClick={() => submitNew()}>祝福</Button>
-                </Grid>
-
-
-
-            </Grid>
-        </form>
+            </form>
+        </>
     )
 
 }
