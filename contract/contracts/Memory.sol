@@ -25,6 +25,10 @@ contract HaiheSFriends is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
         _setTokenURI(tokenId, uri);
     }
 
+    function totalSize() public view returns (uint256) {
+        return _tokenIdCounter.current();
+    }
+
     // The following functions are overrides required by Solidity.
 
     function _burn(uint256 tokenId) internal override(ERC721, ERC721URIStorage) {
