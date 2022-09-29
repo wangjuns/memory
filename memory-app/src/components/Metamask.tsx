@@ -33,13 +33,13 @@ class Metamask extends Component<MetamaskProps, MetamaskState> {
     async connectToMetamask() {
         // @ts-ignore
         const provider = new ethers.providers.Web3Provider(window.ethereum)
-        const accounts = await provider.send("eth_requestAccounts", []);
+
 
         const contract = new ethers.Contract('0x2279b7a0a67db372996a5fab50d91eaa73d2ebe6', MemoryABI, provider);
 
         this.setState({
             context: {
-                selectedAddress: accounts[0],
+                //selectedAddress: accounts[0],
                 contract: contract,
                 provider: provider,
             }
@@ -47,21 +47,9 @@ class Metamask extends Component<MetamaskProps, MetamaskState> {
     }
 
     renderMetamask() {
-
         if (!this.state.context) {
-            return (
-                <>
-                    <button onClick={() => this.connectToMetamask()}>Connect to Metamask</button>
+            this.connectToMetamask()
 
-                </>
-            )
-        } else {
-            return (
-                <>
-
-                    <p>Welcome {this.state.context.selectedAddress}</p>
-                </>
-            );
         }
     }
 
@@ -105,12 +93,12 @@ class Metamask extends Component<MetamaskProps, MetamaskState> {
 
 
     render() {
+        this.renderMetamask()
         return (
             <div>
                 <Container>
                     <>
 
-                        {this.renderMetamask()}
 
                         {this.renderMain()}
 

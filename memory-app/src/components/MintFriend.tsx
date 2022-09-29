@@ -1,4 +1,4 @@
-import { Box, Button, IconButton, Stack, TextField } from "@mui/material";
+import { Box, Button, IconButton, Stack, TextField, Typography } from "@mui/material";
 import AppContext from "./AppContext";
 import Grid from '@mui/material/Grid';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -11,12 +11,14 @@ interface MintFriendProps {
 function MintFriend({ context, onSuccess }: MintFriendProps) {
     let bless: string;
     const contract = context.contract!;
+
+    //const accounts = await provider.send("eth_requestAccounts", []);
     const signer = context.provider!.getSigner()
 
     const contractWithSigner = contract.connect(signer);
 
     async function submitNew() {
-        const id = contractWithSigner["mint(string)"](bless)
+        const id = await contractWithSigner["mint(string)"](bless)
         console.log(`add success ${id}`)
         if (onSuccess) {
             onSuccess()
@@ -28,6 +30,10 @@ function MintFriend({ context, onSuccess }: MintFriendProps) {
             <IconButton onClick={() => onSuccess?.()}>
                 <ArrowBackIcon />
             </IconButton>
+
+            <Typography variant="h3" gutterBottom>
+            Blessing
+            </Typography>
             <form>
                 <Grid
                     container

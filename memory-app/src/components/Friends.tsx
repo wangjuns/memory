@@ -52,14 +52,6 @@ function Friends({ context }: { context: AppContext }) {
                         <ImageListItemBar
                             title={item.title}
                             subtitle={item.properties.bless.description}
-                            actionIcon={
-                                <IconButton
-                                    sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
-                                    aria-label={`info about ${item.title}`}
-                                >
-                                    <InfoIcon />
-                                </IconButton>
-                            }
                         />
                     </ImageListItem>
                 ))}
