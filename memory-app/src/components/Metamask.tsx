@@ -1,75 +1,55 @@
-import { Component } from 'react';
+import { useState } from 'react';
 
-import { Container, Fab, IconButton } from '@mui/material';
+import { Container } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import { ethers } from "ethers";
 import MemoryABI from "../abi/Memory.json";
 import AppContext from './AppContext';
 import ContractDetail from './ContractDetail';
 import Friends from './Friends';
 import MintFriend from './MintFriend';
-import GroupAddIcon from '@mui/icons-material/GroupAdd';
-import Grid from '@mui/material/Grid';
 
 
-interface MetamaskProps {
-
-}
-
-interface MetamaskState {
-    context?: AppContext;
-    content: string;
-}
-
-class Metamask extends Component<MetamaskProps, MetamaskState> {
-    constructor(props: any) {
-        super(props);
-
-        this.state = {
-            content: "show",
-        };
-    }
+function Metamask() {
+    const [context, setContext] = useState<AppContext>();
+    const [content, setContent] = useState<string>("show");
 
 
-    async connectToMetamask() {
+    async function connectToMetamask() {
         // @ts-ignore
-        const provider = new ethers.providers.Web3Provider(window.ethereum)
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const contract = new ethers.Contract('0x5fbdb2315678afecb367f032d93f642f64180aa3', MemoryABI, provider);
 
-
-        const contract = new ethers.Contract('0x2279b7a0a67db372996a5fab50d91eaa73d2ebe6', MemoryABI, provider);
-
-        this.setState({
-            context: {
-                //selectedAddress: accounts[0],
-                contract: contract,
-                provider: provider,
-            }
+        setContext({
+            //selectedAddress: accounts[0],
+            contract: contract,
+            provider: provider,
         });
     }
 
-    renderMetamask() {
-        if (!this.state.context) {
-            this.connectToMetamask()
-
+    function renderMetamask() {
+        if (!context) {
+            connectToMetamask()
         }
     }
 
 
-    renderMain() {
-        if (this.state.context) {
+    function renderMain() {
+        if (context) {
             return (
                 <>
-                    {this.state.content === "show" &&
+                    {content === "show" &&
                         <>
                             <Grid container spacing={2}>
                                 <Grid item xs={12}>
                                     <ContractDetail
-                                        context={this.state.context!}
-                                        onAddClick={() => this.setState({ ...this.state, content: "new" })}
+                                        context={context!}
+                                        onAddClick={() => setContent("new")}
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
                                     <Friends
-                                        context={this.state.context!}
+                                        context={context!}
                                     />
 
                                 </Grid>
@@ -79,8 +59,8 @@ class Metamask extends Component<MetamaskProps, MetamaskState> {
                         </>
                     }
 
-                    {this.state.content === "new" &&
-                        <MintFriend context={this.state.context!} onSuccess={() => this.setState({ ...this.state, content: "show" })} />
+                    {content === "new" &&
+                        <MintFriend context={context!} onSuccess={() => setContent("show")} />
                     }
                 </>
 
@@ -90,23 +70,17 @@ class Metamask extends Component<MetamaskProps, MetamaskState> {
         }
     }
 
+    renderMetamask()
 
 
-    render() {
-        this.renderMetamask()
-        return (
-            <div>
-                <Container>
-                    <>
+    return (
+        <div>
+            <Container>
+                {renderMain()}
+            </Container>
+        </div>
+    )
 
-
-                        {this.renderMain()}
-
-                    </>
-                </Container>
-            </div>
-        )
-    }
 }
 
 export default Metamask;

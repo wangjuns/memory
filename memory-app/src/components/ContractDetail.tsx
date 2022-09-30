@@ -20,7 +20,6 @@ function ContractDetail({ context, onAddClick }: ContractDetailProps) {
         const fetchData = async () => {
             setName(await contract.name());
             const size = await contract.totalSupply();
-            console.log(size)
             setSize(size.toNumber());
         }
         fetchData()

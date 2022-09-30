@@ -1,16 +1,22 @@
-import { Box, Button, IconButton, Stack, TextField, Typography } from "@mui/material";
-import AppContext from "./AppContext";
-import Grid from '@mui/material/Grid';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { Box, Button, IconButton, TextField, Typography } from "@mui/material";
+import Grid from '@mui/material/Grid';
+import { ethers } from "ethers";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { useState } from "react";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage"
-import { storage } from "./firebase"
 import { v4 as uuidv4 } from 'uuid';
+import AppContext from "./AppContext";
+import { storage } from "./firebase";
 
 
 interface MintFriendProps {
     context: AppContext;
     onSuccess?: () => void;
+}
+
+async function login(provider: ethers.providers.Web3Provider) {
+    const accounts = await provider.send("eth_requestAccounts", []);
+    return accounts[0]
 }
 
 function MintFriend({ context, onSuccess }: MintFriendProps) {
@@ -22,7 +28,8 @@ function MintFriend({ context, onSuccess }: MintFriendProps) {
         setFile(event.target.files[0]);
     }
 
-    //const accounts = await provider.send("eth_requestAccounts", []);
+    login(context.provider!)
+
     const signer = context.provider!.getSigner()
 
     const contractWithSigner = contract.connect(signer);
@@ -35,6 +42,7 @@ function MintFriend({ context, onSuccess }: MintFriendProps) {
     async function submitNew() {
         if (!file) {
             alert("Please choose a file first!")
+            return;
         }
 
         const filename = `/haihesfriends/data/${uuidv4()}`
