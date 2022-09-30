@@ -2,10 +2,15 @@ import { ethers } from "hardhat";
 
 async function main() {
 
+  const [deployer] = await ethers.getSigners();
+
+  console.log("Deploying contracts with the account:", deployer.address);
+
   const MemoryContract = await ethers.getContractFactory("HaiheSFriends");
   const contract = await MemoryContract.deploy();
 
-  await contract.deployed();
+  const cc = await contract.deployed();
+  console.log("contract address:", cc.address);
 
   //console.log(`Lock with 1 ETH and unlock timestamp ${unlockTime} deployed to ${lock.address}`);
 }
