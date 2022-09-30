@@ -11,6 +11,8 @@ import MintFriend from './MintFriend';
 
 
 function Metamask() {
+    const { REACT_APP_CONTRACT_ID } = process.env;
+
     const [context, setContext] = useState<AppContext>();
     const [content, setContent] = useState<string>("show");
 
@@ -18,7 +20,7 @@ function Metamask() {
     async function connectToMetamask() {
         // @ts-ignore
         const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const contract = new ethers.Contract('0x5fbdb2315678afecb367f032d93f642f64180aa3', MemoryABI, provider);
+        const contract = new ethers.Contract(REACT_APP_CONTRACT_ID!, MemoryABI, provider);
 
         setContext({
             //selectedAddress: accounts[0],
