@@ -25,6 +25,7 @@ function MintFriend({ context, onSuccess }: MintFriendProps) {
     const [file, setFile] = useState();
 
     function handleChange(event: any) {
+        console.log(event)
         setFile(event.target.files[0]);
     }
 
@@ -116,6 +117,7 @@ function MintFriend({ context, onSuccess }: MintFriendProps) {
                             <TextField id="bless" fullWidth label="say..." variant="standard" onChange={(e) => bless = e.target.value} />
                         </Box>
                     </Grid>
+
                     <Grid item xs={12}>
 
                         <input type="file" accept="image/*" onChange={handleChange} />

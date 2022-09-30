@@ -44,14 +44,14 @@ function Friends({ context }: { context: AppContext }) {
                 {friends.map((item) => (
                     <ImageListItem key={item.title}>
                         <img
-                            src={`${item.img}?w=248&fit=crop&auto=format`}
-                            srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
-                            alt={item.title}
+                            src={`${item.image}`}
+                            srcSet={`${item.image}`}
+                            alt={item.name}
                             loading="lazy"
                         />
                         <ImageListItemBar
-                            title={item.title}
-                            subtitle={item.properties.bless.description}
+                            title={item.name}
+                            subtitle={item.name}
                         />
                     </ImageListItem>
                 ))}
