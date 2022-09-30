@@ -20,7 +20,7 @@ async function login(provider: ethers.providers.Web3Provider) {
 }
 
 function MintFriend({ context, onSuccess }: MintFriendProps) {
-    let bless: string;
+    const [bless, setBless] = useState<string>();
     const contract = context.contract!;
     const [file, setFile] = useState();
 
@@ -114,7 +114,7 @@ function MintFriend({ context, onSuccess }: MintFriendProps) {
                                 maxWidth: '100%',
                             }}
                         >
-                            <TextField id="bless" fullWidth label="say..." variant="standard" onChange={(e) => bless = e.target.value} />
+                            <TextField id="bless" fullWidth label="say..." variant="standard" onChange={(e) => setBless(e.target.value)} />
                         </Box>
                     </Grid>
 

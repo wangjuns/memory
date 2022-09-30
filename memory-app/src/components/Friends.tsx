@@ -1,13 +1,9 @@
 import { Container } from "@mui/material";
-import { useEffect, useState } from "react";
-import AppContext from "./AppContext";
-import * as React from 'react';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
-import ListSubheader from '@mui/material/ListSubheader';
-import IconButton from '@mui/material/IconButton';
-import InfoIcon from '@mui/icons-material/Info';
+import { useEffect, useState } from "react";
+import AppContext from "./AppContext";
 
 function Friends({ context }: { context: AppContext }) {
 
@@ -16,19 +12,20 @@ function Friends({ context }: { context: AppContext }) {
     const [friends, setFriends] = useState<any[]>([]);
 
     useEffect(() => {
+
+        console.log("run")
         const fetchData = async () => {
             const size = await contract.totalSupply();
+            setFriends([])
 
-            for (let i = 0; i < size; i++) {
+            for (var i = 0; i < size.toNumber(); i++) {
                 const uri: string = await contract.tokenURI(i);
                 fetch(uri)
                     .then(resp => {
-                        console.log(resp)
                         return resp.json()
                     })
                     .then(value => {
-                        console.log(value)
-                        setFriends([value, ...friends,])
+                        setFriends(old => [value, ...old])
                     })
             }
 
@@ -41,8 +38,8 @@ function Friends({ context }: { context: AppContext }) {
     return (
         <Container>
             <ImageList sx={{ width: 500, height: 450 }}>
-                {friends.map((item) => (
-                    <ImageListItem key={item.title}>
+                {friends.map((item, idex) => (
+                    <ImageListItem key={idex}>
                         <img
                             src={`${item.image}`}
                             srcSet={`${item.image}`}
@@ -51,7 +48,7 @@ function Friends({ context }: { context: AppContext }) {
                         />
                         <ImageListItemBar
                             title={item.name}
-                            subtitle={item.name}
+                            subtitle={item.description}
                         />
                     </ImageListItem>
                 ))}
