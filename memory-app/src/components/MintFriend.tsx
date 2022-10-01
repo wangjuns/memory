@@ -14,10 +14,6 @@ interface MintFriendProps {
     onSuccess?: () => void;
 }
 
-async function login(provider: ethers.providers.Web3Provider) {
-    const accounts = await provider.send("eth_requestAccounts", []);
-    return accounts[0]
-}
 
 function MintFriend({ context, onSuccess }: MintFriendProps) {
     const [bless, setBless] = useState<string>();
@@ -29,9 +25,12 @@ function MintFriend({ context, onSuccess }: MintFriendProps) {
         setFile(event.target.files[0]);
     }
 
-    login(context.provider!)
+    //@ts-ignore
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const login = async () => await provider.send("eth_requestAccounts", []);
+    login()
 
-    const signer = context.provider!.getSigner()
+    const signer = provider!.getSigner()
 
     const contractWithSigner = contract.connect(signer);
 

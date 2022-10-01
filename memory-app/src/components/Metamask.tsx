@@ -11,15 +11,23 @@ import MintFriend from './MintFriend';
 
 
 function Metamask() {
-    const { REACT_APP_CONTRACT_ID } = process.env;
+    const { REACT_APP_NETWORK, REACT_APP_API_KEY, REACT_APP_CONTRACT_ID } = process.env;
 
     const [context, setContext] = useState<AppContext>();
     const [content, setContent] = useState<string>("show");
 
 
     async function connectToMetamask() {
-        // @ts-ignore
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
+
+        let provider;
+
+        if (process.env.NODE_ENV !== 'production') {
+            // @ts-ignore
+            provider = new ethers.providers.Web3Provider(window.ethereum);
+        } else {
+            provider = new ethers.providers.AlchemyProvider(REACT_APP_NETWORK, REACT_APP_API_KEY);
+        }
+
         const contract = new ethers.Contract(REACT_APP_CONTRACT_ID!, MemoryABI, provider);
 
         setContext({
