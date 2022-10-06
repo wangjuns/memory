@@ -7,6 +7,7 @@ import { useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import AppContext from "./AppContext";
 import { storage } from "./firebase";
+import { NFTStorage, File } from 'nft.storage'
 
 
 interface MintFriendProps {
@@ -18,7 +19,7 @@ interface MintFriendProps {
 function MintFriend({ context, onSuccess }: MintFriendProps) {
     const [bless, setBless] = useState<string>();
     const contract = context.contract!;
-    const [file, setFile] = useState();
+    const [file, setFile] = useState<File>();
 
     function handleChange(event: any) {
         console.log(event)
@@ -39,7 +40,7 @@ function MintFriend({ context, onSuccess }: MintFriendProps) {
         return new TextEncoder().encode(s);
     }
 
-    async function submitNew() {
+    async function submitFirebase() {
         if (!file) {
             alert("Please choose a file first!")
             return;
@@ -88,6 +89,32 @@ function MintFriend({ context, onSuccess }: MintFriendProps) {
 
     }
 
+    async function submitIpfs() {
+        if (!file) {
+            alert("Please choose a file first!")
+            return;
+        }
+
+        const name = uuidv4()
+
+        const nftstorage = new NFTStorage({ token: process.env.REACT_APP_NFT_STORAGE_TOKEN! })
+
+        //file.name = name;
+        const metadata = await nftstorage.store({
+            image: file,
+            name: name,
+            description: "",
+        })
+
+        console.log(metadata)
+
+        let id = await contractWithSigner["mint(string)"](metadata.url)
+        console.log(`add success ${id}`)
+        if (onSuccess) {
+            onSuccess()
+        }
+    }
+
     return (
         <>
             <IconButton onClick={() => onSuccess?.()}>
@@ -124,7 +151,7 @@ function MintFriend({ context, onSuccess }: MintFriendProps) {
 
 
                     <Grid item xs={12}>
-                        <Button variant="outlined" onClick={() => submitNew()}>祝福</Button>
+                        <Button variant="outlined" onClick={() => submitIpfs()}>祝福</Button>
                     </Grid>
 
 
