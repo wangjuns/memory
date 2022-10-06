@@ -1,4 +1,4 @@
-import { Container } from "@mui/material";
+import { Container, Skeleton } from "@mui/material";
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
@@ -9,20 +9,27 @@ function ipfsUrl(uri: string) {
     return `https://ipfs.io/ipfs/${uri.split("://")[1]}`;
 }
 
+interface Friend {
+    name: string;
+    description: string;
+    image: string;
+}
+
 function Friends({ context }: { context: AppContext }) {
 
     const contract = context.contract!;
 
-    const [friends, setFriends] = useState<any[]>([]);
+    const [friends, setFriends] = useState(new Map<number, Friend>());
+    const [friendSize, setFriendSize] = useState<number>(0);
 
     useEffect(() => {
 
         console.log("run")
         const fetchData = async () => {
             const size = await contract.totalSupply();
-            setFriends([])
+            setFriendSize(size.toNumber())
 
-            for (var i = 0; i < size.toNumber(); i++) {
+            for (let i = 0; i < size.toNumber(); i++) {
                 const uri: string = await contract.tokenURI(i);
                 let url = uri;
                 if (uri.startsWith("ipfs://")) {
@@ -34,7 +41,7 @@ function Friends({ context }: { context: AppContext }) {
                         return resp.json()
                     })
                     .then(value => {
-                        setFriends(old => [value, ...old])
+                        setFriends(old => new Map([...old, [i, value]]))
                     })
             }
 
@@ -56,22 +63,24 @@ function Friends({ context }: { context: AppContext }) {
     return (
         <Container>
             <ImageList cols={3} gap={8}>
-                {friends.map((item, idex) => (
-                    <ImageListItem key={idex}>
-                        <img
-                            src={`${imageUrl(item.image)}`}
-                            srcSet={`${imageUrl(item.image)}`}
-                            alt={item.name}
-                            loading="lazy"
-                        />
-                        <ImageListItemBar
-                            title={item.description}
-                        />
-                    </ImageListItem>
+                {Array.from(new Array(friendSize).keys()).map((idex) => (
+                    <>
+                        {friends.has(idex) ? (<ImageListItem sx={{ height: 400 }} key={idex} >
+                            <img
+                                src={`${imageUrl(friends.get(idex)!.image)}`}
+                                srcSet={`${imageUrl(friends.get(idex)!.image)}`}
+                                alt={friends.get(idex)!.name}
+                                loading="lazy"
+                            />
+                            <ImageListItemBar
+                                title={friends.get(idex)!.description}
+                            />
+                        </ImageListItem>) : (<Skeleton variant="rectangular" sx={{ height: 400 }} />)}
+                    </>
                 ))}
             </ImageList>
 
-        </Container>
+        </Container >
     )
 }
 
