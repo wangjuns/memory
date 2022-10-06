@@ -103,7 +103,7 @@ function MintFriend({ context, onSuccess }: MintFriendProps) {
         const metadata = await nftstorage.store({
             image: file,
             name: name,
-            description: "",
+            description: bless ? bless : "",
         })
 
         console.log(metadata)

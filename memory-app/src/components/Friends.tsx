@@ -55,7 +55,7 @@ function Friends({ context }: { context: AppContext }) {
 
     return (
         <Container>
-            <ImageList sx={{ width: 500, height: 450 }}>
+            <ImageList cols={3} gap={8}>
                 {friends.map((item, idex) => (
                     <ImageListItem key={idex}>
                         <img
@@ -65,8 +65,7 @@ function Friends({ context }: { context: AppContext }) {
                             loading="lazy"
                         />
                         <ImageListItemBar
-                            title={item.name}
-                            subtitle={item.description}
+                            title={item.description}
                         />
                     </ImageListItem>
                 ))}
