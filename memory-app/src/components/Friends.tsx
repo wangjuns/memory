@@ -24,7 +24,6 @@ function Friends({ context }: { context: AppContext }) {
 
     useEffect(() => {
 
-        console.log("run")
         const fetchData = async () => {
             const size = await contract.totalSupply();
             setFriendSize(size.toNumber())
@@ -64,7 +63,7 @@ function Friends({ context }: { context: AppContext }) {
         <Container>
             <ImageList cols={3} gap={8}>
                 {Array.from(new Array(friendSize).keys()).map((idex) => (
-                    <>
+                    <div key={idex}>
                         {friends.has(idex) ? (<ImageListItem sx={{ height: 400 }} key={idex} >
                             <img
                                 src={`${imageUrl(friends.get(idex)!.image)}`}
@@ -76,7 +75,7 @@ function Friends({ context }: { context: AppContext }) {
                                 title={friends.get(idex)!.description}
                             />
                         </ImageListItem>) : (<Skeleton variant="rectangular" sx={{ height: 400 }} />)}
-                    </>
+                    </div>
                 ))}
             </ImageList>
 
