@@ -4,6 +4,8 @@ import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
 import { useEffect, useState } from "react";
 import AppContext from "./AppContext";
+import { isBrowser, isMobile } from 'react-device-detect';
+
 
 function ipfsUrl(uri: string) {
     return `https://ipfs.io/ipfs/${uri.split("://")[1]}`;
@@ -58,13 +60,16 @@ function Friends({ context }: { context: AppContext }) {
         }
     }
 
+    const imageCols = isMobile ? 1 : 3;
+    const imageHeight = isMobile ? 300 : 400;
+
 
     return (
         <Container>
-            <ImageList cols={3} gap={8}>
+            <ImageList cols={imageCols} gap={8}>
                 {Array.from(new Array(friendSize).keys()).map((idex) => (
                     <div key={idex}>
-                        {friends.has(idex) ? (<ImageListItem sx={{ height: 400 }} key={idex} >
+                        {friends.has(idex) ? (<ImageListItem sx={{ height: { imageHeight } }} key={idex} >
                             <img
                                 src={`${imageUrl(friends.get(idex)!.image)}`}
                                 srcSet={`${imageUrl(friends.get(idex)!.image)}`}
@@ -74,7 +79,7 @@ function Friends({ context }: { context: AppContext }) {
                             <ImageListItemBar
                                 title={friends.get(idex)!.description}
                             />
-                        </ImageListItem>) : (<Skeleton variant="rectangular" sx={{ height: 400 }} />)}
+                        </ImageListItem>) : (<Skeleton variant="rectangular" sx={{ height: { imageHeight } }} />)}
                     </div>
                 ))}
             </ImageList>
