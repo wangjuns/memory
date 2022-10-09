@@ -1,5 +1,5 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { Box, Button, IconButton, TextField, Typography } from "@mui/material";
+import { Backdrop, Box, Button, CircularProgress, IconButton, TextField, Typography } from "@mui/material";
 import Grid from '@mui/material/Grid';
 import { ethers } from "ethers";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
@@ -95,6 +95,7 @@ function MintFriend({ context, onSuccess }: MintFriendProps) {
             return;
         }
 
+        setSubmitting(true)
         const name = uuidv4()
 
         const nftstorage = new NFTStorage({ token: process.env.REACT_APP_NFT_STORAGE_TOKEN! })
@@ -107,13 +108,18 @@ function MintFriend({ context, onSuccess }: MintFriendProps) {
         })
 
         console.log(metadata)
-
+        setSubmitting(false)
+        
         let id = await contractWithSigner["mint(string)"](metadata.url)
         console.log(`add success ${id}`)
         if (onSuccess) {
             onSuccess()
+
         }
     }
+
+
+    const [submitting, setSubmitting] = useState(false);
 
     return (
         <>
@@ -158,6 +164,14 @@ function MintFriend({ context, onSuccess }: MintFriendProps) {
 
                 </Grid>
             </form>
+
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={submitting}
+            //onClick={handleClose}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
         </>
     )
 
