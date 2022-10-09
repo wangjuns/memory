@@ -1,10 +1,10 @@
-import { Container, Skeleton } from "@mui/material";
+import { Card, CardContent, CardMedia, Container, Dialog, Skeleton, Typography } from "@mui/material";
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
 import { useEffect, useState } from "react";
 import AppContext from "./AppContext";
-import { isBrowser, isMobile } from 'react-device-detect';
+import { isMobile } from 'react-device-detect';
 
 
 function ipfsUrl(uri: string) {
@@ -63,26 +63,60 @@ function Friends({ context }: { context: AppContext }) {
     const imageCols = isMobile ? 1 : 3;
     const imageHeight = isMobile ? 300 : 400;
 
+    const [openDetail, setOpenDetail] = useState(false);
+    const [selectOne, setSelectOne] = useState(0);
+
 
     return (
         <Container>
             <ImageList cols={imageCols} gap={8}>
                 {Array.from(new Array(friendSize).keys()).map((idex) => (
                     <div key={idex}>
-                        {friends.has(idex) ? (<ImageListItem sx={{ height: { imageHeight } }} key={idex} >
-                            <img
-                                src={`${imageUrl(friends.get(idex)!.image)}`}
-                                srcSet={`${imageUrl(friends.get(idex)!.image)}`}
-                                alt={friends.get(idex)!.name}
-                                loading="lazy"
-                            />
-                            <ImageListItemBar
-                                title={friends.get(idex)!.description}
-                            />
-                        </ImageListItem>) : (<Skeleton variant="rectangular" sx={{ height: { imageHeight } }} />)}
+                        {friends.has(idex) ? (
+                            <ImageListItem sx={{ height: { imageHeight } }}
+                                key={idex}
+                                onClick={() => { setOpenDetail(true); setSelectOne(idex) }}
+                            >
+                                <img
+                                    src={`${imageUrl(friends.get(idex)!.image)}`}
+                                    srcSet={`${imageUrl(friends.get(idex)!.image)}`}
+                                    alt={friends.get(idex)!.name}
+                                    loading="lazy"
+                                />
+                                <ImageListItemBar
+                                    title={friends.get(idex)!.description}
+                                />
+                            </ImageListItem>) : (<Skeleton variant="rectangular" sx={{ height: { imageHeight } }} />)}
                     </div>
                 ))}
             </ImageList>
+
+            <Dialog
+                open={openDetail}
+                sx={{ backgroundColor: 'white' }}
+                onClick={() => setOpenDetail(false)}
+            >
+                {friends.has(selectOne) &&
+                    <Card sx={{ maxWidth: 345 }}>
+                        <CardMedia
+                            component="img"
+                            height={imageHeight}
+                            image={`${imageUrl(friends.get(selectOne)!.image)}`}
+                            alt="green iguana"
+                        />
+                        <CardContent>
+
+                            <Typography variant="body2" color="text.secondary">
+                                {friends.get(selectOne)!.description}
+                            </Typography>
+                        </CardContent>
+
+                    </Card>
+
+                }
+
+
+            </Dialog>
 
         </Container >
     )
